@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Runtime/Engine/Classes/PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -27,5 +28,7 @@ public:
 private:
 	//how far is the reach length
 	float reach = 100.f;
+
+	UPhysicsHandleComponent* physicsHandle = nullptr;
 	
 };
