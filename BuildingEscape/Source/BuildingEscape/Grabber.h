@@ -28,7 +28,6 @@ public:
 private:
 	//how far is the reach length
 	float reach = 100.f;
-
 	UPhysicsHandleComponent* physicsHandle = nullptr;
 	UInputComponent* inputComponent = nullptr;
 
@@ -36,4 +35,11 @@ private:
 	void Grab();
 
 	void Release();
+
+	void FindPhysicsHandleComponent();
+
+	void SetupInputComponent();
+
+	//Return hit for first physics body in reach
+	const FHitResult GetFirstPhysicsBodyInReach();
 };
