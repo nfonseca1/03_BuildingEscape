@@ -5,6 +5,7 @@
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Runtime/Engine/Public/CollisionQueryParams.h"
+#include "Runtime/Engine/Classes/Components/PrimitiveComponent.h"
 
 
 // Sets default values for this component's properties
@@ -30,12 +31,26 @@ void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
 
-	GetFirstPhysicsBodyInReach();
+	auto hitResult = GetFirstPhysicsBodyInReach();
+	auto componentToGrab = hitResult.GetComponent();
+	auto actorHit = hitResult.GetActor();
+
+	//If we hit something then attach a physics handle
+	if (actorHit)
+	{
+		physicsHandle->GrabComponentAtLocation(
+			componentToGrab,
+			NAME_None,
+			componentToGrab->GetOwner()->GetActorLocation()
+		);
+	}
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab released"));
+
+	physicsHandle->ReleaseComponent();
 }
 
 void UGrabber::FindPhysicsHandleComponent()
@@ -73,7 +88,7 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 		playerViewPointRotation
 	);
 
-	FVector LineTraceEnd = playerViewPointLocation + playerViewPointRotation.Vector() * reach;
+	FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotation.Vector() * reach;
 
 	//Setup query params
 	FCollisionQueryParams traceParams(FName(TEXT("")), false, GetOwner());
@@ -83,7 +98,7 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 	GetWorld()->LineTraceSingleByObjectType(
 		hit,
 		playerViewPointLocation,
-		LineTraceEnd,
+		lineTraceEnd,
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		traceParams
 	);
@@ -103,5 +118,20 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	FVector playerViewPointLocation;
+	FRotator playerViewPointRotation;
+
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		playerViewPointLocation,
+		playerViewPointRotation
+	);
+
+	FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotation.Vector() * reach;
+
+	if (physicsHandle->GrabbedComponent)
+	{
+		//move the object that we're holding
+		physicsHandle->SetTargetLocation(lineTraceEnd);
+	}
 }
 
