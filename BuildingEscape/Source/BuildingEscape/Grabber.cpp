@@ -73,11 +73,12 @@ void UGrabber::Grab()
 	// If we hit something then attach a physics handle
 	if (actorHit)
 	{
-		physicsHandle->GrabComponentAtLocation
+		physicsHandle->GrabComponent // GrabComponentAtLocation() is newer
 		(
 			componentToGrab,
 			NAME_None, // no bones needed
-			componentToGrab->GetOwner()->GetActorLocation()
+			componentToGrab->GetOwner()->GetActorLocation(),
+			true // constrain rotation
 		);
 	}
 }
