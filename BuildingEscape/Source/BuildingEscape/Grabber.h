@@ -7,7 +7,6 @@
 #include "Runtime/Engine/Classes/PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UGrabber : public UActorComponent
 {
@@ -19,6 +18,7 @@ public:
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 
 protected:
 	// Called when the game starts

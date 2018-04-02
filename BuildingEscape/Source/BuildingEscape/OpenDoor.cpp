@@ -5,7 +5,6 @@
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Runtime/Engine/Classes/Components/PrimitiveComponent.h"
 
-
 #define OUT // This just indicates out parameters
 
 // Sets default values for this component's properties
@@ -33,7 +32,8 @@ void UOpenDoor::BeginPlay()
 
 void UOpenDoor::OpenDoor()
 {
-	owner->SetActorRotation(FRotator(0.f, openAngle, 0.f));
+	//owner->SetActorRotation(FRotator(0.f, openAngle, 0.f));
+	OnOpenRequest.Broadcast();
 }
 
 void UOpenDoor::CloseDoor()
